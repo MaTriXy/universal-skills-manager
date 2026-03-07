@@ -9,7 +9,7 @@ metadata:
   primaryEnv: SKILLSMP_API_KEY
 ---
 
-<!-- Version: 1.6.0 -->
+<!-- Version: 1.7.0 -->
 
 # Universal Skills Manager
 
@@ -23,7 +23,7 @@ Activate this skill when the user:
 - Wants to **sync** skills between different AI tools (e.g., "Copy this Gemini skill to OpenCode").
 - Asks to **move or copy** skills between scopes (User vs. Project).
 - Mentions "Google Anti-Gravity", "OpenCode", or "Gemini" in the context of skills/extensions.
-- Wants to **package this skill for claude.ai or Claude Desktop** (ZIP upload).
+- Wants to **package a skill for claude.ai, Claude Desktop, or ChatGPT** (ZIP upload).
 
 ## Supported Ecosystem
 
@@ -42,21 +42,24 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **Cursor** | `~/.cursor/skills/` | `./.cursor/skills/` |
 | **Cline** | `~/.cline/skills/` | `./.cline/skills/` |
 
-**claude.ai / Claude Desktop (ZIP Upload Required):**
+**Cloud Platforms (ZIP Upload Required):**
 
 | Platform | Installation Method |
 | :--- | :--- |
 | **claude.ai** | Upload ZIP via Settings → Capabilities → Upload Skill |
 | **Claude Desktop** | Upload ZIP via Settings → Capabilities → Upload Skill |
+| **ChatGPT** | Upload ZIP via Profile → Skills → New skill → Upload from your computer |
 
-*Note: claude.ai and Claude Desktop don't have access to local environment variables. Use the "Package for claude.ai/Desktop" capability (Section 5) to create a ZIP. Embedding an API key is optional — SkillHub and ClawHub search work without one. If you do include a key, do NOT share the ZIP publicly (see Section 5 for credential safety guidance).*
+*Note: claude.ai, Claude Desktop, and ChatGPT don't have access to local environment variables. Use the "Package for Cloud Upload" capability (Section 5) to create a ZIP. Embedding an API key is optional — SkillHub and ClawHub search work without one. If you do include a key, do NOT share the ZIP publicly (see Section 5 for credential safety guidance).*
+
+*ChatGPT Skills are currently in beta and available on Business, Enterprise, Edu, Teachers, and Healthcare plans. Skills are off by default for Enterprise/Edu — workspace admins must enable them in Permissions & roles.*
 
 **IMPORTANT - Universal Skills Manager Platform Limitations:**
 
 This skill (Universal Skills Manager) requires network access to call the SkillsMP API, SkillHub API, ClawHub API, and GitHub. Handle these scenarios:
 
-- **If user asks to package/ZIP the Universal Skills Manager itself for claude.ai:**
-  Tell the user: "The Universal Skills Manager won't work on claude.ai because it requires network access to call the SkillsMP API, SkillHub API, ClawHub API, and GitHub APIs. claude.ai's code execution environment doesn't allow outbound network requests. However, I can package OTHER skills for claude.ai upload - those will work as long as they don't require network access."
+- **If user asks to package/ZIP the Universal Skills Manager itself for claude.ai or ChatGPT:**
+  Tell the user: "The Universal Skills Manager won't work on claude.ai or ChatGPT because it requires network access to call the SkillsMP API, SkillHub API, ClawHub API, and GitHub APIs. These platforms' code execution environments don't allow outbound network requests. However, I can package OTHER skills for cloud upload - those will work as long as they don't require network access."
 
 - **If user wants to try the Universal Skills Manager on Claude Desktop:**
   Tell the user: "Claude Desktop has network access capabilities, but there is a **known bug** where custom domains added to the 'Additional allowed domains' setting are not included in the network egress JWT token. This means the skill cannot reach the required APIs even after whitelisting them.
@@ -104,36 +107,44 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 4.  **Determine Primary Target:**
     *   Ask: "Should this be installed Globally (User) or Locally (Project)?"
     *   Determine the primary tool (e.g., if user is in Claude Code, Claude is primary)
-    *   **If the user specifies claude.ai or Claude Desktop as the target**, go to Step 4a instead of Step 5.
+    *   **If the user specifies claude.ai, Claude Desktop, or ChatGPT as the target**, go to Step 4a instead of Step 5.
 
-    **4a. Claude Desktop / claude.ai Target Flow:**
-    If the user wants the skill for claude.ai or Claude Desktop:
+    **4a. Cloud Platform Target Flow (claude.ai / Claude Desktop / ChatGPT):**
+    If the user wants the skill for claude.ai, Claude Desktop, or ChatGPT:
     1.  **Validate frontmatter** by running `validate_frontmatter.py` against the downloaded SKILL.md:
         ```bash
         python3 scripts/validate_frontmatter.py /path/to/downloaded/SKILL.md
         ```
     2.  **If the skill passes validation**, package it as a ZIP and provide upload instructions (see Step 6a below).
     3.  **If the skill fails validation**, notify the user with the exact issues before doing anything:
-        > "This skill isn't formatted correctly for Claude Desktop. I found these issues:
+        > "This skill isn't formatted correctly for cloud upload. I found these issues:
         > - [list each issue from the validator, e.g., 'Unsupported top-level key: version', 'Description uses a YAML block scalar']
         >
         > I can fix these automatically — unsupported keys will be moved into metadata, block scalars will be converted to inline strings, etc. The skill's functionality won't change.
         >
-        > Would you like me to fix it and package it for Claude Desktop?"
+        > Would you like me to fix it and package it?"
     4.  **If the user agrees**: Run the fix and re-validate:
         ```bash
         python3 scripts/validate_frontmatter.py /path/to/downloaded/SKILL.md --fix
         ```
         Then package as ZIP (Step 6a).
-    5.  **If the user declines**: Skip Claude Desktop. Offer to install the skill as-is to other locally detected tools instead.
+    5.  **If the user declines**: Skip cloud packaging. Offer to install the skill as-is to other locally detected tools instead.
 
     **6a. Package and deliver ZIP:**
     *   Create a ZIP containing the skill folder (with fixed SKILL.md if applicable)
-    *   Provide upload instructions:
-        > "Your skill is packaged and ready. To install on Claude Desktop:
+    *   Provide upload instructions based on the target platform:
+        > **For claude.ai / Claude Desktop:**
+        > "Your skill is packaged and ready. To install:
         > 1. Go to Settings → Capabilities
         > 2. Click 'Upload skill' in the Skills section
         > 3. Select the ZIP file and upload"
+        >
+        > **For ChatGPT:**
+        > "Your skill is packaged and ready. To install:
+        > 1. Click your profile icon and select Skills (or go to chatgpt.com/skills)
+        > 2. Click 'New skill'
+        > 3. Select 'Upload from your computer'
+        > 4. Select the ZIP file and upload"
     *   Continue to Step 5 to offer syncing to other local tools as well.
 
 5.  **The "Sync Check" (CRITICAL):**
@@ -194,7 +205,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 
     *   **Security:** Never log, display, or echo the full API key value.
 
-    **Note for claude.ai/Desktop users:** Environment variables are not available. Use the "Package for claude.ai/Desktop" capability (Section 5) to create a ZIP with your API key embedded, or provide your key when prompted.
+    **Note for claude.ai/Desktop/ChatGPT users:** Environment variables are not available. Use the "Package for Cloud Upload" capability (Section 5) to create a ZIP with your API key embedded, or provide your key when prompted.
 
 2.  **Execute Search Based on Selected Source:**
 
@@ -338,16 +349,16 @@ This skill (Universal Skills Manager) requires network access to call the Skills
     - Skills unique to one tool
     - Skills installed everywhere
 
-### 5. Package for claude.ai / Claude Desktop
+### 5. Package for Cloud Upload (claude.ai / Claude Desktop / ChatGPT)
 
-**Trigger:** User wants to use this skill in claude.ai or Claude Desktop (e.g., "Package this for claude.ai", "Create a ZIP for Claude Desktop", "I want to upload this skill to claude.ai", "Prepare skill for web upload").
+**Trigger:** User wants to use this skill in claude.ai, Claude Desktop, or ChatGPT (e.g., "Package this for claude.ai", "Create a ZIP for Claude Desktop", "Package for ChatGPT", "I want to upload this skill to claude.ai", "Prepare skill for web upload", "Package this for chatgpt.com").
 
 **Procedure:**
 1.  **Explain the Process:**
-    "I'll create a ZIP file with this skill ready for upload to claude.ai or Claude Desktop. Since cloud environments don't have access to your local environment variables, I can optionally embed your API key in the package. Note: the API key is optional — SkillHub and ClawHub search work without one."
+    "I'll create a ZIP file with this skill ready for upload to claude.ai, Claude Desktop, or ChatGPT. Since cloud environments don't have access to your local environment variables, I can optionally embed your API key in the package. Note: the API key is optional — SkillHub and ClawHub search work without one."
 
 2.  **Validate Frontmatter Compatibility (CRITICAL — do this BEFORE packaging):**
-    Run `validate_frontmatter.py` to check the SKILL.md against the Agent Skills spec:
+    Run `validate_frontmatter.py` to check the SKILL.md against the Agent Skills spec (used by both claude.ai/Claude Desktop and ChatGPT):
     ```bash
     # Validate only (report issues)
     python3 scripts/validate_frontmatter.py /path/to/SKILL.md
@@ -430,11 +441,19 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 
 6.  **Provide Upload Instructions:**
     *   "Your skill package is ready! To use it:"
-    *   "1. Download the ZIP file: `universal-skills-manager.zip`"
-    *   "2. Go to claude.ai → Settings → Capabilities"
-    *   "3. Scroll to Skills section and click 'Upload skill'"
-    *   "4. Select the ZIP file and upload"
-    *   "5. Enable the skill and start using it!"
+    *   **For claude.ai / Claude Desktop:**
+        *   "1. Download the ZIP file"
+        *   "2. Go to Settings → Capabilities"
+        *   "3. Click 'Upload skill' in the Skills section"
+        *   "4. Select the ZIP file and upload"
+        *   "5. Enable the skill and start using it!"
+    *   **For ChatGPT:**
+        *   "1. Download the ZIP file"
+        *   "2. Click your profile icon and select Skills (or go to chatgpt.com/skills)"
+        *   "3. Click 'New skill'"
+        *   "4. Select 'Upload from your computer'"
+        *   "5. Select the ZIP file and upload"
+        *   "6. The skill is now installed and ChatGPT will use it when relevant!"
 
 7.  **Security Reminder:**
     *   If a key was embedded: "This ZIP contains your API key. Do NOT share it publicly, distribute it to others, or commit it to version control. If you need to share the skill, create a key-free version (without `config.json`) and let each user add their own key."
@@ -450,15 +469,15 @@ This skill (Universal Skills Manager) requires network access to call the Skills
     *   Gemini uses `SKILL.md`.
     *   Cline uses the same `SKILL.md` format with `name` and `description` frontmatter. The `name` field must match the directory name. No manifest generation required. Note: Cline also reads `.claude/skills/` at the project level, so Claude Code project skills work in Cline automatically.
     *   If OpenCode or Anti-Gravity require a specific manifest (e.g., `manifest.json`), generate a basic one based on the `SKILL.md` frontmatter during installation.
-6.  **claude.ai / Claude Desktop Frontmatter Compatibility Check:**
-    When a user wants to upload or package a skill for **claude.ai** or **Claude Desktop**, validate the SKILL.md frontmatter against the [Agent Skills specification](https://agentskills.io/specification). Claude Desktop uses `strictyaml` (not standard PyYAML) which rejects ambiguous YAML constructs like block scalars. It will reject non-compliant skills with "malformed YAML frontmatter" or "unexpected key" errors.
+6.  **Cloud Platform Frontmatter Compatibility Check (claude.ai / Claude Desktop / ChatGPT):**
+    When a user wants to upload or package a skill for **claude.ai**, **Claude Desktop**, or **ChatGPT**, validate the SKILL.md frontmatter against the [Agent Skills specification](https://agentskills.io/specification). All three platforms use strict frontmatter validation that rejects ambiguous YAML constructs like block scalars. Non-compliant skills will be rejected with "malformed YAML frontmatter" or "unexpected key" errors.
 
     **Allowed top-level frontmatter fields (Agent Skills spec):**
 
     | Field | Required | Constraints |
     | :--- | :--- | :--- |
     | `name` | Yes | Max 64 chars, lowercase letters/numbers/hyphens only, must match directory name |
-    | `description` | Yes | Max 1024 chars. No angle brackets (`<` or `>`). Avoid literal block scalars (`|`) — known to fail with blank lines. Folded scalars (`>`) work but inline strings are safest |
+    | `description` | Yes | Max 1024 chars. No angle brackets (`<` or `>`). Avoid literal block scalars (`\|`) — known to fail with blank lines. Folded scalars (`>`) work but inline strings are safest |
     | `license` | No | License name or reference to bundled file |
     | `compatibility` | No | Max 500 chars, environment requirements |
     | `metadata` | No | Flat key-value pairs only (string keys to string values — no nested objects, no arrays) |

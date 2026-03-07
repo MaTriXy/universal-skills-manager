@@ -11,7 +11,7 @@ The skill enables:
 - **Installation**: Installing skills from GitHub or ClawHub to User-level (global) or Project-level (local) scopes
 - **Synchronization**: Copying/syncing skills across different AI tools
 - **Consistency**: Maintaining version consistency across installed locations
-- **Cloud Packaging**: Creating ready-to-upload ZIP files for claude.ai/Claude Desktop with embedded API keys
+- **Cloud Packaging**: Creating ready-to-upload ZIP files for claude.ai/Claude Desktop/ChatGPT with embedded API keys
 
 ## Architecture
 
@@ -37,7 +37,7 @@ universal-skills-manager/
     └── scripts/
         ├── install_skill.py        # Python helper for downloading skills from GitHub
         ├── scan_skill.py           # Security scanner (20+ detection categories)
-        └── validate_frontmatter.py # claude.ai/Desktop YAML frontmatter validator
+        └── validate_frontmatter.py # Cloud platform YAML frontmatter validator
 ```
 
 ### Skill Structure
@@ -64,16 +64,23 @@ The skill manages skills across these AI tools and their respective paths:
 | Cursor | `~/.cursor/skills/` | `./.cursor/skills/` |
 | Cline | `~/.cline/skills/` | `./.cline/skills/` |
 
-### claude.ai and Claude Desktop Support
+### Cloud Platform Support (claude.ai, Claude Desktop, ChatGPT)
 
-For claude.ai and Claude Desktop, skills must be uploaded as ZIP files through the web UI. The skill includes a "Package for Cloud Upload" capability that:
+For claude.ai, Claude Desktop, and ChatGPT, skills must be uploaded as ZIP files through their respective web UIs. The skill includes a "Package for Cloud Upload" capability that:
 1. Prompts user for their SkillsMP API key (optional — SkillHub works without one)
 2. Creates `config.json` with the embedded key
-3. Generates a ZIP file ready for upload
+3. Validates frontmatter against the Agent Skills spec
+4. Generates a ZIP file ready for upload
+
+**Upload paths:**
+- **claude.ai / Claude Desktop**: Settings → Capabilities → Upload Skill
+- **ChatGPT**: Profile → Skills → New skill → Upload from your computer
+
+ChatGPT Skills are in beta and available on Business, Enterprise, Edu, Teachers, and Healthcare plans. All three platforms follow the same [Agent Skills specification](https://agentskills.io/specification) for SKILL.md frontmatter.
 
 The hybrid API key discovery checks:
 1. `$SKILLSMP_API_KEY` environment variable (Claude Code)
-2. `config.json` in skill directory (claude.ai/Claude Desktop)
+2. `config.json` in skill directory (claude.ai/Claude Desktop/ChatGPT)
 3. Source selection prompt: offer SkillsMP (with key), SkillHub (no key needed), or ClawHub (no key needed) as fallback
 
 ## Key Concepts
@@ -195,7 +202,7 @@ The skill maintains consistency by:
 - **Skill definition**: `universal-skills-manager/SKILL.md` - The main skill logic and instructions
 - **Install helper**: `universal-skills-manager/scripts/install_skill.py` - Python script for downloading skills from GitHub
 - **Security scanner**: `universal-skills-manager/scripts/scan_skill.py` - Security scanner with 20+ detection categories
-- **Frontmatter validator**: `universal-skills-manager/scripts/validate_frontmatter.py` - claude.ai/Desktop YAML frontmatter validator and fixer
+- **Frontmatter validator**: `universal-skills-manager/scripts/validate_frontmatter.py` - Cloud platform YAML frontmatter validator and fixer (claude.ai/Claude Desktop/ChatGPT)
 - **Technical reference**: `docs/TECHNICAL.md` - API reference, script usage, security details, frontmatter spec
 - **Test suite**: `tests/test_scan_skill.py` - 62 tests covering all scanner detection categories
 - **Security policy**: `SECURITY.md` - Vulnerability reporting and security architecture
@@ -261,3 +268,4 @@ For example, installing "code-debugging" creates:
 - **Cross-platform compatibility**: Some tools (OpenCode, Anti-Gravity) may require additional manifest files generated from SKILL.md frontmatter
 - **GitHub content fetching**: Skills from SkillsMP/SkillHub are fetched from GitHub using raw URLs converted from tree URLs. ClawHub skills are fetched directly via ClawHub's `/file` endpoint.
 - **ClawHub install bypass**: ClawHub installs bypass `install_skill.py` (which expects GitHub URLs). Instead, content is fetched via ClawHub's API, saved to a temp directory, scanned with `scan_skill.py` manually, and then copied to the destination.
+- **Cloud platform packaging**: claude.ai, Claude Desktop, and ChatGPT all require ZIP file uploads. All three follow the same [Agent Skills specification](https://agentskills.io/specification) for SKILL.md frontmatter. The `validate_frontmatter.py` script validates compatibility for all three platforms. ChatGPT Skills are in beta (Business/Enterprise/Edu/Teachers/Healthcare plans).

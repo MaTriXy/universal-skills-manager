@@ -8,7 +8,7 @@ Detailed technical documentation for the Universal Skills Manager. For a quick o
 - [Install Script Usage](#install-script-usage)
 - [API Key Setup (All Options)](#api-key-setup)
 - [API Reference](#api-reference)
-- [claude.ai / Claude Desktop](#claudeai--claude-desktop)
+- [Cloud Platforms (claude.ai / Claude Desktop / ChatGPT)](#cloud-platforms-claudeai--claude-desktop--chatgpt)
 - [Frontmatter Compatibility](#frontmatter-compatibility)
 
 ---
@@ -267,17 +267,45 @@ curl -X GET "https://clawhub.ai/api/v1/skills/{slug}/file?path=SKILL.md" \
 
 ---
 
-## claude.ai / Claude Desktop
+## Cloud Platforms (claude.ai / Claude Desktop / ChatGPT)
 
-### Known Limitation
+All three cloud platforms require skills to be uploaded as ZIP files and follow the same [Agent Skills specification](https://agentskills.io/specification) for SKILL.md frontmatter validation.
+
+### Platform Upload Paths
+
+| Platform | Upload Path | Plans |
+|----------|------------|-------|
+| **claude.ai** | Settings → Capabilities → Upload Skill | All Claude plans |
+| **Claude Desktop** | Settings → Capabilities → Upload Skill | All Claude plans |
+| **ChatGPT** | Profile → Skills → New skill → Upload from your computer | Business, Enterprise, Edu, Teachers, Healthcare (beta) |
+
+### ChatGPT Skills Notes
+
+- Skills are currently in beta and off by default for Enterprise/Edu — workspace admins must enable them in Permissions & roles
+- Skills can be shared within a workspace and installed for other members
+- ChatGPT also has a [Skills editor](https://chatgpt.com/skills/editor) for building skills in-browser
+- Skills can be @-mentioned in conversations for explicit invocation
+- Skills follow the open [Agent Skills standard](https://agentskills.io/home) and are portable across tools
+- OpenAI also provides a [Skills API](https://developers.openai.com/api/docs/guides/tools-skills/) (`POST /v1/skills`) for programmatic upload with versioning
+
+### ChatGPT Skills Limits
+
+| Limit | Value |
+|-------|-------|
+| Max uncompressed file size | 25 MB |
+| Max ZIP upload size | 50 MB |
+| Max files per skill | 500 |
+| SKILL.md matching | Case-insensitive |
+
+### Known Limitation (Claude Desktop)
 
 Claude Desktop has a [known bug](https://github.com/anthropics/claude-code/issues) where custom domains added to the network egress whitelist are not included in the JWT token. This means the Universal Skills Manager cannot reach SkillsMP, SkillHub, or ClawHub APIs even when the domains are whitelisted. Until this is fixed, **Claude Code CLI is the recommended way to use this skill**.
 
 ### Manual Packaging
 
-If you want to manually package the skill for claude.ai or Claude Desktop:
+If you want to manually package a skill for any cloud platform:
 
-1. Copy the skill folder and create `config.json`:
+1. Copy the skill folder and optionally create `config.json`:
    ```bash
    cp -r universal-skills-manager /tmp/
    echo '{"skillsmp_api_key": "YOUR_KEY_HERE"}' > /tmp/universal-skills-manager/config.json
@@ -288,10 +316,9 @@ If you want to manually package the skill for claude.ai or Claude Desktop:
    cd /tmp && zip -r universal-skills-manager.zip universal-skills-manager/
    ```
 
-3. Upload to claude.ai:
-   - Go to Settings -> Capabilities
-   - Click "Upload skill" in the Skills section
-   - Select your ZIP file
+3. Upload to your platform:
+   - **claude.ai / Claude Desktop**: Go to Settings → Capabilities → Click "Upload skill" → Select ZIP
+   - **ChatGPT**: Click profile → Skills → "New skill" → "Upload from your computer" → Select ZIP
 
 **Security Note:** If the packaged ZIP contains your API key, do not share it publicly or commit it to version control.
 
@@ -299,7 +326,7 @@ If you want to manually package the skill for claude.ai or Claude Desktop:
 
 ## Frontmatter Compatibility
 
-Claude Desktop uses [`strictyaml`](https://hitchdev.com/strictyaml/) to parse SKILL.md frontmatter, which is stricter than standard YAML. Many third-party skills fail to upload with "malformed YAML frontmatter" or "unexpected key" errors.
+Cloud platforms use strict YAML parsing for SKILL.md frontmatter. Claude Desktop uses [`strictyaml`](https://hitchdev.com/strictyaml/) (not standard PyYAML), and ChatGPT follows the same [Agent Skills spec](https://agentskills.io/specification) validation. Many third-party skills fail to upload with "malformed YAML frontmatter" or "unexpected key" errors.
 
 ### Allowed Frontmatter Fields (Agent Skills Spec)
 
@@ -314,7 +341,7 @@ Claude Desktop uses [`strictyaml`](https://hitchdev.com/strictyaml/) to parse SK
 
 ### Validation Script
 
-The `validate_frontmatter.py` script checks and auto-fixes skills for Claude Desktop compatibility:
+The `validate_frontmatter.py` script checks and auto-fixes skills for cloud platform compatibility (claude.ai, Claude Desktop, and ChatGPT):
 
 ```bash
 # Check a skill for issues
@@ -329,16 +356,18 @@ python3 scripts/validate_frontmatter.py /path/to/skill.zip --fix
 
 **What `--fix` does:**
 - Moves unsupported top-level keys (e.g., `version`, `author`) into `metadata` as string values
-- Collapses literal block scalar (`|`) descriptions to inline quoted strings (error if blank lines present). Folded scalars (`>`) trigger a warning but are not auto-fixed since they work in current Claude Desktop
+- Collapses literal block scalar (`|`) descriptions to inline quoted strings (error if blank lines present). Folded scalars (`>`) trigger a warning but are not auto-fixed since they work in current testing
 - Converts YAML list-format `allowed-tools` to space-delimited string
 - Strips angle brackets from description
 - Flattens nested `metadata` objects to flat string key-value pairs
 - Truncates fields exceeding length limits
 
-The skill's functionality is preserved. When using the Universal Skills Manager to install skills for Claude Desktop, this check runs automatically -- you'll be notified of any issues and asked before any fixes are applied.
+The skill's functionality is preserved. When using the Universal Skills Manager to package skills for cloud platforms, this check runs automatically -- you'll be notified of any issues and asked before any fixes are applied.
 
 ### Sources
 
 - [Agent Skills Specification](https://agentskills.io/specification)
 - [agentskills/agentskills reference SDK](https://github.com/agentskills/agentskills/tree/main/skills-ref) (uses `strictyaml`)
 - [anthropics/skills quick_validate.py](https://github.com/anthropics/skills/blob/main/skills/skill-creator/scripts/quick_validate.py)
+- [OpenAI Skills API Docs](https://developers.openai.com/api/docs/guides/tools-skills/)
+- [OpenAI Skills Cookbook](https://developers.openai.com/cookbook/examples/skills_in_api)

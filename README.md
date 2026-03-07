@@ -15,7 +15,7 @@
 
 ---
 
-**v1.6.0** · Three-source skill discovery · 10 supported AI tools · Hardened security scanning
+**v1.7.0** · Three-source skill discovery · 10 supported AI tools · ChatGPT cloud upload · Hardened security scanning
 
 A centralized skill manager for AI coding assistants. Discovers, installs, and synchronizes skills from multiple sources — [SkillsMP.com](https://skillsmp.com) (curated, AI semantic search), [SkillHub](https://skills.palebluedot.live) (community skills, no API key required), and [ClawHub](https://clawhub.ai) (versioned skills, semantic search, no API key required) — across multiple AI tools including Claude Code, OpenAI Codex, Gemini CLI, and more.
 
@@ -61,7 +61,7 @@ This video covers:
 - ⚡ **One-Liner Installer**: `curl | sh` auto-detects your tools and installs everywhere, with `--tools` flag for targeting specific tools
 - ✅ **Multi-File Validation**: Validates `.py`, `.sh`, `.json`, `.yaml` files during install
 - 🌍 **Global Installation**: User-level skills available across all projects
-- ☁️ **Cloud Upload Packaging**: Create ready-to-upload ZIP files for claude.ai/Claude Desktop
+- ☁️ **Cloud Upload Packaging**: Create ready-to-upload ZIP files for claude.ai/Claude Desktop/ChatGPT
 
 ## Installation
 
@@ -133,20 +133,28 @@ Once installed, just ask your AI assistant:
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cline** | `~/.cline/skills/` | `./.cline/skills/` |
 
-## claude.ai and Claude Desktop
+## Cloud Platforms (claude.ai, Claude Desktop, ChatGPT)
 
-For claude.ai or Claude Desktop, skills need to be uploaded as ZIP files. If you have the skill installed in Claude Code, just ask:
+For claude.ai, Claude Desktop, or ChatGPT, skills need to be uploaded as ZIP files. If you have the skill installed in Claude Code or another local tool, just ask:
 
 ```
 "Package this skill for claude.ai"
 "Create a ZIP for Claude Desktop"
+"Package this for ChatGPT"
 ```
 
-The AI will validate the skill's frontmatter for compatibility, package it, and provide upload instructions (Settings → Capabilities → Upload skill).
+The AI will validate the skill's frontmatter for compatibility, package it, and provide platform-specific upload instructions.
 
-> **Known Limitation:** Claude Desktop has a [known bug](https://github.com/anthropics/claude-code/issues) where custom domains added to the network egress whitelist aren't included in the JWT token. Until this is fixed, **Claude Code CLI is the recommended way to use the Universal Skills Manager**.
+| Platform | Upload Path |
+|----------|------------|
+| **claude.ai / Claude Desktop** | Settings → Capabilities → Upload skill |
+| **ChatGPT** | Profile → Skills → New skill → Upload from your computer |
 
-For manual packaging, frontmatter compatibility details, and the validation script, see [Technical Docs: claude.ai / Claude Desktop](docs/TECHNICAL.md#claudeai--claude-desktop).
+> **ChatGPT Note:** Skills are currently in beta and available on Business, Enterprise, Edu, Teachers, and Healthcare plans.
+
+> **Claude Desktop Limitation:** Claude Desktop has a [known bug](https://github.com/anthropics/claude-code/issues) where custom domains added to the network egress whitelist aren't included in the JWT token. Until this is fixed, **Claude Code CLI is the recommended way to use the Universal Skills Manager**.
+
+For manual packaging, frontmatter compatibility details, and the validation script, see [Technical Docs: Cloud Platforms](docs/TECHNICAL.md#cloud-platforms-claudeai--claude-desktop--chatgpt).
 
 ## Configuration
 

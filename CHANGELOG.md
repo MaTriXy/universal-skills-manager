@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-03-07
+
+### Added
+- **ChatGPT cloud upload support**: ChatGPT (chatgpt.com) now supports skills via ZIP upload, following the same Agent Skills specification as claude.ai/Claude Desktop. Added ChatGPT to cloud platforms table, Section 5 packaging flow, upload instructions, and platform limitations.
+- **ChatGPT Skills documentation**: Platform-specific upload path (Profile → Skills → New skill → Upload from your computer), plan availability (Business/Enterprise/Edu/Teachers/Healthcare beta), Skills editor, workspace sharing, and OpenAI Skills API reference.
+- **ChatGPT Skills limits**: Documented 25 MB uncompressed / 50 MB ZIP / 500 files per skill limits in `docs/TECHNICAL.md`.
+
+### Changed
+- **Section 5 generalized to "Package for Cloud Upload"**: Renamed from "Package for claude.ai / Claude Desktop" to cover all three cloud platforms. Upload instructions now branch by platform.
+- **`validate_frontmatter.py` messaging updated**: All output messages now reference "cloud platforms" instead of "Claude Desktop" specifically, since claude.ai, Claude Desktop, and ChatGPT all use the same Agent Skills spec validation.
+- **Platform limitations expanded**: ChatGPT's sandboxed code execution (like claude.ai) prevents the Universal Skills Manager from making outbound API calls. Documented alongside the existing claude.ai limitation.
+- **`docs/TECHNICAL.md` restructured**: Renamed "claude.ai / Claude Desktop" section to "Cloud Platforms" covering all three platforms with upload paths table, ChatGPT-specific notes, and limits.
+- **README.md cloud section**: Replaced single-platform section with multi-platform table showing upload paths for all three cloud platforms.
+
 ## [1.6.0] - 2026-02-14
 
 ### Fixed

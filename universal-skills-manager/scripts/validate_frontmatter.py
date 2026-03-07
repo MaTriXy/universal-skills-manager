@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-SKILL.md Frontmatter Validator for claude.ai / Claude Desktop
+SKILL.md Frontmatter Validator for claude.ai / Claude Desktop / ChatGPT
 
 Validates and optionally fixes SKILL.md YAML frontmatter to comply with the
 Agent Skills specification (https://agentskills.io/specification).
 
-Claude Desktop's upload validator is strict — it rejects skills with
+Cloud platform upload validators are strict — they reject skills with
 unsupported top-level keys, nested metadata objects, or constraint violations.
 
 Usage:
@@ -325,7 +325,6 @@ def validate(data: dict) -> list:
         else:
             if len(desc) > DESCRIPTION_MAX_LENGTH:
                 issues.append({"level": "error", "field": "description", "message": f"'description' exceeds {DESCRIPTION_MAX_LENGTH} chars (got {len(desc)})"})
-            # Anthropic's quick_validate.py rejects angle brackets in description
             if '<' in desc or '>' in desc:
                 issues.append({"level": "error", "field": "description", "message": "Description cannot contain angle brackets (< or >)"})
 
@@ -348,13 +347,13 @@ def validate(data: dict) -> list:
                     issues.append({
                         "level": "error",
                         "field": f"metadata.{mk}",
-                        "message": f"Nested object in metadata.{mk} — Claude Desktop only allows flat string values"
+                        "message": f"Nested object in metadata.{mk} — cloud platforms only allow flat string values"
                     })
                 elif isinstance(mv, list):
                     issues.append({
                         "level": "error",
                         "field": f"metadata.{mk}",
-                        "message": f"Array in metadata.{mk} — Claude Desktop only allows flat string values"
+                        "message": f"Array in metadata.{mk} — cloud platforms only allow flat string values"
                     })
                 elif not isinstance(mv, str):
                     issues.append({
@@ -369,8 +368,7 @@ def validate(data: dict) -> list:
         issues.append({"level": "error", "field": "allowed-tools", "message": f"'allowed-tools' must be a space-delimited string, not a YAML list. Use: allowed-tools: Read Write Edit"})
 
     # Check for block scalars in description
-    # Note: Testing (2026-02-14) confirmed that folded scalars (>) work in Claude Desktop.
-    # Literal scalars (|) with blank lines are known to fail. We flag:
+    # Literal scalars (|) with blank lines are known to fail on cloud platforms. We flag:
     #   - | with blank lines → error (known to fail)
     #   - | without blank lines → warning (untested, may fail)
     #   - > (any) → warning (works in testing, but inline strings are safest)
@@ -381,19 +379,19 @@ def validate(data: dict) -> list:
             issues.append({
                 "level": "error",
                 "field": "description",
-                "message": "Description uses a literal block scalar (|) with blank lines — known to fail in Claude Desktop. Use a simple inline string instead"
+                "message": "Description uses a literal block scalar (|) with blank lines — known to fail on cloud platforms. Use a simple inline string instead"
             })
         elif info["type"] == "|":
             issues.append({
                 "level": "warning",
                 "field": "description",
-                "message": "Description uses a literal block scalar (|) — may cause issues in Claude Desktop. Inline strings are safest"
+                "message": "Description uses a literal block scalar (|) — may cause issues on cloud platforms. Inline strings are safest"
             })
         else:
             issues.append({
                 "level": "warning",
                 "field": "description",
-                "message": "Description uses a folded block scalar (>) — works in current Claude Desktop testing, but inline strings are safest for maximum compatibility"
+                "message": "Description uses a folded block scalar (>) — works in current testing, but inline strings are safest for maximum compatibility"
             })
     # Warn about block scalars in other fields too
     for field, info in block_fields.items():
@@ -603,7 +601,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Validate SKILL.md frontmatter for claude.ai / Claude Desktop compatibility",
+        description="Validate SKILL.md frontmatter for claude.ai / Claude Desktop / ChatGPT compatibility",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -661,7 +659,7 @@ Examples:
         print(json.dumps(result, indent=2))
     else:
         if not issues:
-            print(f"✓ {path}: Frontmatter is valid for claude.ai / Claude Desktop")
+            print(f"✓ {path}: Frontmatter is valid for claude.ai / Claude Desktop / ChatGPT")
         else:
             errors = [i for i in issues if i["level"] == "error"]
             warnings = [i for i in issues if i["level"] == "warning"]
