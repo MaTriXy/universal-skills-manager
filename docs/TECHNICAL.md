@@ -51,7 +51,7 @@ The skill includes a Python helper script (`install_skill.py`) for downloading s
 # Preview what would be downloaded (dry-run)
 python3 path/to/install_skill.py \
   --url "https://github.com/user/repo/tree/main/skill-folder" \
-  --dest "~/.codex/skills/my-skill" \
+  --dest "~/.agents/skills/my-skill" \
   --dry-run
 
 # Actually install to your preferred tool

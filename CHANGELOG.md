@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-03-08
+
+### Fixed
+- **OpenAI Codex skill paths aligned with official documentation**: Updated all Codex skill paths from `~/.codex/skills/` / `./.codex/skills/` to `~/.agents/skills/` / `./.agents/skills/` per the [official Codex skills documentation](https://developers.openai.com/codex/skills/). This was a discrepancy across 5 files: `SKILL.md` (path table, detection command, find command), `README.md`, `CLAUDE.md`, `docs/TECHNICAL.md`, and `install.sh`.
+
 ## [1.7.0] - 2026-03-07
 
 ### Added

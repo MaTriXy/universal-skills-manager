@@ -58,7 +58,7 @@ The skill manages skills across these AI tools and their respective paths:
 | OpenCode | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | OpenClaw | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | Claude Code | `~/.claude/skills/` | `./.claude/skills/` |
-| OpenAI Codex | `~/.codex/skills/` | `./.codex/skills/` |
+| OpenAI Codex | `~/.agents/skills/` | `./.agents/skills/` |
 | block/goose | `~/.config/goose/skills/` | `./.goose/agents/` |
 | Roo Code | `~/.roo/skills/` | `./.roo/skills/` |
 | Cursor | `~/.cursor/skills/` | `./.cursor/skills/` |

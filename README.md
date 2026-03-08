@@ -15,7 +15,7 @@
 
 ---
 
-**v1.7.0** · Three-source skill discovery · 10 supported AI tools · ChatGPT cloud upload · Hardened security scanning
+**v1.7.1** · Three-source skill discovery · 10 supported AI tools · ChatGPT cloud upload · Hardened security scanning
 
 A centralized skill manager for AI coding assistants. Discovers, installs, and synchronizes skills from multiple sources — [SkillsMP.com](https://skillsmp.com) (curated, AI semantic search), [SkillHub](https://skills.palebluedot.live) (community skills, no API key required), and [ClawHub](https://clawhub.ai) (versioned skills, semantic search, no API key required) — across multiple AI tools including Claude Code, OpenAI Codex, Gemini CLI, and more.
 
@@ -128,7 +128,7 @@ Once installed, just ask your AI assistant:
 | **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
-| **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
+| **OpenAI Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cline** | `~/.cline/skills/` | `./.cline/skills/` |

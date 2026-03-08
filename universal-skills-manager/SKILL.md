@@ -9,7 +9,7 @@ metadata:
   primaryEnv: SKILLSMP_API_KEY
 ---
 
-<!-- Version: 1.7.0 -->
+<!-- Version: 1.7.1 -->
 
 # Universal Skills Manager
 
@@ -36,7 +36,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
-| **OpenAI Codex** | `~/.codex/skills/` | `./.codex/skills/` |
+| **OpenAI Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/skills/` | `./.cursor/skills/` |
@@ -311,7 +311,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
     ```bash
     # Check each tool's skills directory
     ls -d ~/.claude/skills 2>/dev/null && echo "Claude: ✓"
-    ls -d ~/.codex/skills 2>/dev/null && echo "Codex: ✓"
+    ls -d ~/.agents/skills 2>/dev/null && echo "Codex: ✓"
     ls -d ~/.gemini/skills 2>/dev/null && echo "Gemini: ✓"
     ls -d ~/.gemini/antigravity/skills 2>/dev/null && echo "Antigravity: ✓"
     ls -d ~/.openclaw/workspace/skills 2>/dev/null && echo "OpenClaw: ✓"
@@ -325,7 +325,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 2.  **Collect All Skills:**
     For each detected tool, list skill folders:
     ```bash
-    find ~/.{claude,codex,gemini,gemini/antigravity,openclaw/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
+    find ~/.{claude,agents,gemini,gemini/antigravity,openclaw/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
       xargs -I{} basename {} | sort -u
     ```
 

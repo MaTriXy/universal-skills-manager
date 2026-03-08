@@ -169,7 +169,7 @@ detect_tools() {
     check_tool "Anti-Gravity"   "$HOME/.gemini/antigravity"     "$HOME/.gemini/antigravity/skills"
     check_tool "OpenCode"       "$HOME/.config/opencode"        "$HOME/.config/opencode/skills"
     check_tool "OpenClaw"       "$HOME/.openclaw"               "$HOME/.openclaw/workspace/skills"
-    check_tool "OpenAI Codex"   "$HOME/.codex"                  "$HOME/.codex/skills"
+    check_tool "OpenAI Codex"   "$HOME/.agents"                 "$HOME/.agents/skills"
     check_tool "block/goose"    "$HOME/.config/goose"           "$HOME/.config/goose/skills"
     check_tool "Roo Code"       "$HOME/.roo"                    "$HOME/.roo/skills"
     check_tool "Cursor"         "$HOME/.cursor"                 "$HOME/.cursor/skills"
