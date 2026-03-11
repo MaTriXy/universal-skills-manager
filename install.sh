@@ -291,6 +291,13 @@ download_repo() {
         die "Download failed: SKILL.md not found in downloaded content."
     fi
 
+    # Extract project version from CHANGELOG.md
+    SKILL_VERSION=""
+    CHANGELOG_FILE="$(dirname "$SKILL_SOURCE")/CHANGELOG.md"
+    if [ -f "$CHANGELOG_FILE" ]; then
+        SKILL_VERSION=$(grep -m1 '## \[' "$CHANGELOG_FILE" | sed 's/## \[\(.*\)\].*/\1/')
+    fi
+
     success "Downloaded successfully"
 }
 
@@ -466,7 +473,11 @@ check_api_key() {
 show_summary() {
     echo ""
     echo "${BOLD}========================================${RESET}"
-    echo "${BOLD}  Installation Complete!${RESET}"
+    if [ -n "$SKILL_VERSION" ]; then
+        echo "${BOLD}  Installation Complete! (v${SKILL_VERSION})${RESET}"
+    else
+        echo "${BOLD}  Installation Complete!${RESET}"
+    fi
     echo "${BOLD}========================================${RESET}"
     echo ""
     printf "  Installed to: %s%d%s tool(s)\n" "$GREEN" "$INSTALLED_COUNT" "$RESET"
