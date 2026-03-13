@@ -181,7 +181,7 @@ def test_extract_frontmatter_nonexistent(tmp_path):
 def test_detect_tools_finds_existing(tmp_path):
     """Detects tools whose skills directories exist."""
     make_tool_dir(tmp_path, ".claude/skills")
-    make_tool_dir(tmp_path, ".gemini/skills")
+    make_tool_dir(tmp_path, ".agents/skills")
     detected = detect_tools(home=tmp_path)
     ids = [t["id"] for t in detected]
     assert "claude-code" in ids
@@ -218,7 +218,7 @@ def test_detect_tools_both_scopes(tmp_path):
 
 
 def test_detect_tools_all_tools(tmp_path):
-    """All 10 tools are detected when their directories exist."""
+    """All 9 tools are detected when their directories exist."""
     for tool in TOOLS:
         path = tool["user_path"].replace("~/", "")
         make_tool_dir(tmp_path, path)
@@ -317,7 +317,7 @@ def test_latest_mtime_empty(tmp_path):
 def test_build_inventory_merges_tools(tmp_path):
     """build_inventory merges the same skill from different tools."""
     make_skill(tmp_path, ".claude/skills", "shared-skill")
-    make_skill(tmp_path, ".gemini/skills", "shared-skill")
+    make_skill(tmp_path, ".agents/skills", "shared-skill")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     assert "shared-skill" in inv
@@ -327,7 +327,7 @@ def test_build_inventory_merges_tools(tmp_path):
 def test_build_inventory_separate_skills(tmp_path):
     """Skills unique to one tool appear as separate entries."""
     make_skill(tmp_path, ".claude/skills", "only-claude")
-    make_skill(tmp_path, ".gemini/skills", "only-gemini")
+    make_skill(tmp_path, ".agents/skills", "only-gemini")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     assert "only-claude" in inv
@@ -344,7 +344,7 @@ def test_build_inventory_separate_skills(tmp_path):
 def test_compare_in_sync(tmp_path):
     """Identical skills across tools are reported as in_sync."""
     make_skill(tmp_path, ".claude/skills", "synced")
-    make_skill(tmp_path, ".gemini/skills", "synced")
+    make_skill(tmp_path, ".agents/skills", "synced")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -355,7 +355,7 @@ def test_compare_in_sync(tmp_path):
 def test_compare_out_of_sync(tmp_path):
     """Different content across tools is reported as out_of_sync."""
     make_skill(tmp_path, ".claude/skills", "diverged", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "diverged", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "diverged", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -378,9 +378,9 @@ def test_compare_single_tool(tmp_path):
 def test_compare_mixed(tmp_path):
     """Mix of in_sync, out_of_sync, and single skills."""
     make_skill(tmp_path, ".claude/skills", "synced")
-    make_skill(tmp_path, ".gemini/skills", "synced")
+    make_skill(tmp_path, ".agents/skills", "synced")
     make_skill(tmp_path, ".claude/skills", "diverged", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "diverged", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "diverged", SKILL_MD_V2)
     make_skill(tmp_path, ".claude/skills", "lonely")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -412,7 +412,7 @@ def test_format_human_no_skills(tmp_path):
 def test_format_human_in_sync(tmp_path):
     """Human output shows in-sync marker."""
     make_skill(tmp_path, ".claude/skills", "ok")
-    make_skill(tmp_path, ".gemini/skills", "ok")
+    make_skill(tmp_path, ".agents/skills", "ok")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -423,7 +423,7 @@ def test_format_human_in_sync(tmp_path):
 def test_format_human_out_of_sync(tmp_path):
     """Human output shows newest/stale markers."""
     make_skill(tmp_path, ".claude/skills", "drift", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "drift", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "drift", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -435,7 +435,7 @@ def test_format_human_out_of_sync(tmp_path):
 def test_format_human_verbose_shows_file_diff(tmp_path):
     """Verbose mode shows per-file diff details for out-of-sync skills."""
     make_skill(tmp_path, ".claude/skills", "drift", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "drift", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "drift", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -447,7 +447,7 @@ def test_format_human_verbose_shows_file_diff(tmp_path):
 def test_format_human_summary_counts(tmp_path):
     """Summary line reports correct counts."""
     make_skill(tmp_path, ".claude/skills", "synced")
-    make_skill(tmp_path, ".gemini/skills", "synced")
+    make_skill(tmp_path, ".agents/skills", "synced")
     make_skill(tmp_path, ".claude/skills", "lonely")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -479,7 +479,7 @@ def test_format_json_valid(tmp_path):
 def test_format_json_structure(tmp_path):
     """JSON output has the expected structure for skills."""
     make_skill(tmp_path, ".claude/skills", "my-skill")
-    make_skill(tmp_path, ".gemini/skills", "my-skill")
+    make_skill(tmp_path, ".agents/skills", "my-skill")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -497,9 +497,9 @@ def test_format_json_structure(tmp_path):
 def test_format_json_summary_counts(tmp_path):
     """JSON summary has correct counts."""
     make_skill(tmp_path, ".claude/skills", "synced")
-    make_skill(tmp_path, ".gemini/skills", "synced")
+    make_skill(tmp_path, ".agents/skills", "synced")
     make_skill(tmp_path, ".claude/skills", "diverged", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "diverged", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "diverged", SKILL_MD_V2)
     make_skill(tmp_path, ".claude/skills", "solo")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -546,9 +546,9 @@ def test_skill_with_extra_files(tmp_path):
     assert "rich-skill" in inv
     h1 = inv["rich-skill"]["hash"]
 
-    make_skill(tmp_path, ".gemini/skills", "rich-skill")
-    tool_entry2 = {"id": "gemini-cli", "name": "Gemini CLI", "scope": "user",
-                   "path": tmp_path / ".gemini/skills"}
+    make_skill(tmp_path, ".agents/skills", "rich-skill")
+    tool_entry2 = {"id": "gemini-cli", "name": "Gemini CLI / Codex", "scope": "user",
+                   "path": tmp_path / ".agents/skills"}
     inv2 = inventory_tool(tool_entry2)
     assert inv2["rich-skill"]["hash"] != h1
 
@@ -697,7 +697,7 @@ This is yet another version.
 def test_compare_conflict_three_versions(tmp_path):
     """Three distinct versions across three tools are reported as conflict."""
     make_skill(tmp_path, ".claude/skills", "diverged", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "diverged", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "diverged", SKILL_MD_V2)
     make_skill(tmp_path, ".config/opencode/skills", "diverged", SKILL_MD_V3)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -709,7 +709,7 @@ def test_compare_conflict_three_versions(tmp_path):
 def test_compare_two_versions_not_conflict(tmp_path):
     """Two distinct versions stay as out_of_sync, not conflict."""
     make_skill(tmp_path, ".claude/skills", "diverged", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "diverged", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "diverged", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -719,7 +719,7 @@ def test_compare_two_versions_not_conflict(tmp_path):
 def test_compare_three_tools_two_versions_is_out_of_sync(tmp_path):
     """Three tools with only 2 distinct versions = out_of_sync, not conflict."""
     make_skill(tmp_path, ".claude/skills", "partial", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "partial", SKILL_MD_CONTENT)
+    make_skill(tmp_path, ".agents/skills", "partial", SKILL_MD_CONTENT)
     make_skill(tmp_path, ".config/opencode/skills", "partial", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -735,7 +735,7 @@ def test_compare_three_tools_two_versions_is_out_of_sync(tmp_path):
 def test_compare_includes_file_diff(tmp_path):
     """Out-of-sync results include per-file diff vs newest."""
     make_skill(tmp_path, ".claude/skills", "drift", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "drift", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "drift", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -750,7 +750,7 @@ def test_compare_includes_file_diff(tmp_path):
 def test_compare_in_sync_no_file_diff(tmp_path):
     """In-sync results have empty file_diff."""
     make_skill(tmp_path, ".claude/skills", "ok")
-    make_skill(tmp_path, ".gemini/skills", "ok")
+    make_skill(tmp_path, ".agents/skills", "ok")
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -765,7 +765,7 @@ def test_compare_in_sync_no_file_diff(tmp_path):
 def test_format_human_conflict(tmp_path):
     """Human output shows CONFLICT marker for 3+ versions."""
     make_skill(tmp_path, ".claude/skills", "mess", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "mess", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "mess", SKILL_MD_V2)
     make_skill(tmp_path, ".config/opencode/skills", "mess", SKILL_MD_V3)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -790,7 +790,7 @@ def test_format_human_file_count_single(tmp_path):
 def test_format_human_verbose_file_diff(tmp_path):
     """Verbose mode shows per-file diff details."""
     make_skill(tmp_path, ".claude/skills", "drift", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "drift", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "drift", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)
@@ -802,7 +802,7 @@ def test_format_human_verbose_file_diff(tmp_path):
 def test_format_json_includes_conflict_count(tmp_path):
     """JSON summary includes conflict count."""
     make_skill(tmp_path, ".claude/skills", "mess", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "mess", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "mess", SKILL_MD_V2)
     make_skill(tmp_path, ".config/opencode/skills", "mess", SKILL_MD_V3)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
@@ -825,7 +825,7 @@ def test_format_json_includes_file_count(tmp_path):
 def test_format_json_includes_file_diff(tmp_path):
     """JSON includes file_diff for out-of-sync skills."""
     make_skill(tmp_path, ".claude/skills", "drift", SKILL_MD_CONTENT)
-    make_skill(tmp_path, ".gemini/skills", "drift", SKILL_MD_V2)
+    make_skill(tmp_path, ".agents/skills", "drift", SKILL_MD_V2)
     detected = detect_tools(home=tmp_path)
     inv = build_inventory(detected)
     results = compare_inventory(inv)

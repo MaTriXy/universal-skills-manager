@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-03-13
+
+### Changed
+- **Gemini CLI and OpenAI Codex merged into single tool entry**: Gemini CLI (v0.30+) now reads both `~/.agents/skills/` and `~/.gemini/skills/`, with `.agents/` taking precedence. OpenAI Codex also uses `~/.agents/skills/`. To avoid duplicate-skill conflicts (Gemini CLI warning that `.agents/` overrides `.gemini/`), both tools are now served by a single `~/.agents/skills/` directory. The separate `~/.gemini/skills/` path is no longer used for skill installation.
+- **Tool count reduced from 10 to 9**: Gemini CLI and OpenAI Codex share a single entry ("Gemini CLI / Codex") since they use the same skills directory. The `--tools` flags `gemini` and `codex` both remain valid and install to `~/.agents/skills/`.
+- `sync_skills.py` bumped to v1.2.0.
+
+### Fixed
+- **Gemini CLI duplicate-skill conflict warnings**: Installing skills to both `~/.gemini/skills/` and `~/.agents/skills/` caused Gemini CLI to detect conflicts and warn that `.agents/` was overriding `.gemini/`. Now only `~/.agents/skills/` is used, eliminating the conflict entirely.
+
+### Updated files
+- `sync_skills.py`: Merged Gemini CLI + Codex entries, removed separate OpenAI Codex entry.
+- `SKILL.md`: Updated ecosystem table, detection commands, matrix report, sync examples.
+- `CLAUDE.md`: Updated ecosystem table, tool counts, shared-path note.
+- `README.md`: Updated supported tools table, version, `--tools` help text.
+- `docs/TECHNICAL.md`: Updated example install paths, tool counts.
+- `install.sh`: Merged Gemini CLI / Codex detection; both `gemini` and `codex` flags map to `~/.agents/skills/`.
+- `tests/test_sync_skills.py`: Updated all tests from `.gemini/skills` to `.agents/skills` for Gemini CLI.
+
 ## [1.8.1] - 2026-03-11
 
 ### Added

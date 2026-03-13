@@ -25,18 +25,23 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 # ============================================================================
 # Tool Registry
+#
+# Gemini CLI (v0.30+) reads both ~/.agents/skills/ and ~/.gemini/skills/, with
+# .agents/ taking precedence.  OpenAI Codex also uses ~/.agents/skills/.
+# To avoid duplicate-skill conflicts we register a single entry at
+# ~/.agents/skills/ that serves both tools.
 # ============================================================================
 
 TOOLS = [
     {
         "id": "gemini-cli",
-        "name": "Gemini CLI",
-        "user_path": "~/.gemini/skills",
-        "project_path": ".gemini/skills",
+        "name": "Gemini CLI / Codex",
+        "user_path": "~/.agents/skills",
+        "project_path": ".agents/skills",
     },
     {
         "id": "anti-gravity",
@@ -61,12 +66,6 @@ TOOLS = [
         "name": "Claude Code",
         "user_path": "~/.claude/skills",
         "project_path": ".claude/skills",
-    },
-    {
-        "id": "openai-codex",
-        "name": "OpenAI Codex",
-        "user_path": "~/.agents/skills",
-        "project_path": ".agents/skills",
     },
     {
         "id": "goose",

@@ -9,7 +9,7 @@ metadata:
   primaryEnv: SKILLSMP_API_KEY
 ---
 
-<!-- Version: 1.7.1 -->
+<!-- Version: 1.9.0 -->
 
 # Universal Skills Manager
 
@@ -31,16 +31,17 @@ This skill manages the following tools and scopes. Always verify these paths exi
 
 | Tool | User Scope (Global) | Project Scope (Local) |
 | :--- | :--- | :--- |
-| **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
+| **Gemini CLI / Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
-| **OpenAI Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cursor** | `~/.cursor/skills/` | `./.cursor/skills/` |
 | **Cline** | `~/.cline/skills/` | `./.cline/skills/` |
+
+*Note: Gemini CLI (v0.30+) and OpenAI Codex both use `~/.agents/skills/` as their skills directory. Gemini CLI also reads `~/.gemini/skills/` but gives `.agents/skills/` higher precedence. To avoid duplicate-skill conflicts, we install to `~/.agents/skills/` only, which serves both tools.*
 
 **Cloud Platforms (ZIP Upload Required):**
 
@@ -339,8 +340,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
     ```bash
     # Check each tool's skills directory
     ls -d ~/.claude/skills 2>/dev/null && echo "Claude: ✓"
-    ls -d ~/.agents/skills 2>/dev/null && echo "Codex: ✓"
-    ls -d ~/.gemini/skills 2>/dev/null && echo "Gemini: ✓"
+    ls -d ~/.agents/skills 2>/dev/null && echo "Gemini CLI / Codex: ✓"
     ls -d ~/.gemini/antigravity/skills 2>/dev/null && echo "Antigravity: ✓"
     ls -d ~/.openclaw/workspace/skills 2>/dev/null && echo "OpenClaw: ✓"
     ls -d ~/.cursor/skills 2>/dev/null && echo "Cursor: ✓"
@@ -353,7 +353,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 2.  **Collect All Skills:**
     For each detected tool, list skill folders:
     ```bash
-    find ~/.{claude,agents,gemini,gemini/antigravity,openclaw/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
+    find ~/.{claude,agents,gemini/antigravity,openclaw/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
       xargs -I{} basename {} | sort -u
     ```
 
@@ -365,8 +365,8 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 
     Example output:
     ```
-    | Skill | Claude | Codex | Gemini |
-    |-------|--------|-------|--------|
+    | Skill | Claude | Gemini/Codex | Cursor |
+    |-------|--------|--------------|--------|
     | humanizer | ✅ | ❌ | ✅ |
     | skill-creator | ❌ | ✅ | ❌ |
     | using-superpowers | ✅ | ✅ | ✅ |
@@ -671,7 +671,7 @@ ClawHub hosts skill files directly (not on GitHub), so the install flow bypasses
 This flow applies when syncing a skill from one local tool directory to another (e.g., after the sync status reporter identifies out-of-sync locations).
 
 1.  **Identify source and targets:** Use the sync status report (`python3 scripts/sync_skills.py`) to determine which tool has the newest version and which are stale or missing the skill.
-2.  **Confirm with the user:** Present the proposed copy operations and get explicit approval. Example: "Copy 'code-review' from Claude Code (~/.claude/skills/code-review) to Gemini CLI (~/.gemini/skills/code-review) and OpenCode (~/.config/opencode/skills/code-review)?"
+2.  **Confirm with the user:** Present the proposed copy operations and get explicit approval. Example: "Copy 'code-review' from Claude Code (~/.claude/skills/code-review) to Gemini CLI / Codex (~/.agents/skills/code-review) and OpenCode (~/.config/opencode/skills/code-review)?"
 3.  **Create directory:** `mkdir -p {target_skills_dir}/{skill-name}`
 4.  **Copy all files** from the source to the target, preserving filenames:
     ```bash

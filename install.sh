@@ -102,6 +102,7 @@ Options:
                     (skips auto-detection)
                     Valid: claude,gemini,antigravity,opencode,openclaw,
                            codex,goose,roo,cursor,cline
+                    (gemini and codex both install to ~/.agents/skills/)
 
 Examples:
   sh install.sh                        # Auto-detect and install
@@ -164,16 +165,15 @@ detect_tools() {
     info "Detecting installed AI tools..."
     echo ""
 
-    check_tool "Claude Code"    "$HOME/.claude"                 "$HOME/.claude/skills"
-    check_tool "Gemini CLI"     "$HOME/.gemini"                 "$HOME/.gemini/skills"
-    check_tool "Anti-Gravity"   "$HOME/.gemini/antigravity"     "$HOME/.gemini/antigravity/skills"
-    check_tool "OpenCode"       "$HOME/.config/opencode"        "$HOME/.config/opencode/skills"
-    check_tool "OpenClaw"       "$HOME/.openclaw"               "$HOME/.openclaw/workspace/skills"
-    check_tool "OpenAI Codex"   "$HOME/.agents"                 "$HOME/.agents/skills"
-    check_tool "block/goose"    "$HOME/.config/goose"           "$HOME/.config/goose/skills"
-    check_tool "Roo Code"       "$HOME/.roo"                    "$HOME/.roo/skills"
-    check_tool "Cursor"         "$HOME/.cursor"                 "$HOME/.cursor/skills"
-    check_tool "Cline"          "$HOME/.cline"                  "$HOME/.cline/skills"
+    check_tool "Claude Code"        "$HOME/.claude"             "$HOME/.claude/skills"
+    check_tool_gemini_codex
+    check_tool "Anti-Gravity"       "$HOME/.gemini/antigravity" "$HOME/.gemini/antigravity/skills"
+    check_tool "OpenCode"           "$HOME/.config/opencode"    "$HOME/.config/opencode/skills"
+    check_tool "OpenClaw"           "$HOME/.openclaw"           "$HOME/.openclaw/workspace/skills"
+    check_tool "block/goose"        "$HOME/.config/goose"       "$HOME/.config/goose/skills"
+    check_tool "Roo Code"           "$HOME/.roo"                "$HOME/.roo/skills"
+    check_tool "Cursor"             "$HOME/.cursor"             "$HOME/.cursor/skills"
+    check_tool "Cline"              "$HOME/.cline"              "$HOME/.cline/skills"
 
     if [ "$DETECTED_COUNT" -eq 0 ]; then
         echo ""
@@ -200,6 +200,18 @@ check_tool() {
     fi
 }
 
+check_tool_gemini_codex() {
+    # Gemini CLI (v0.30+) and OpenAI Codex both use ~/.agents/skills/.
+    # Gemini CLI also reads ~/.gemini/skills/ but gives .agents/ precedence.
+    # We install to ~/.agents/skills/ only to avoid duplicate-skill conflicts.
+    if [ -d "$HOME/.gemini" ] || [ -d "$HOME/.agents" ]; then
+        DETECTED_TOOLS="${DETECTED_TOOLS}Gemini CLI / Codex|${HOME}/.agents/skills
+"
+        DETECTED_COUNT=$((DETECTED_COUNT + 1))
+        success "Found: Gemini CLI / Codex"
+    fi
+}
+
 # =============================================================================
 # Tool Filtering (--tools flag)
 # =============================================================================
@@ -222,11 +234,11 @@ filter_tools() {
     for short_name in "$@"; do
         case "$short_name" in
             claude)       match="Claude Code" ;;
-            gemini)       match="Gemini CLI" ;;
+            gemini)       match="Gemini CLI / Codex" ;;
             antigravity)  match="Anti-Gravity" ;;
             opencode)     match="OpenCode" ;;
             openclaw)     match="OpenClaw" ;;
-            codex)        match="OpenAI Codex" ;;
+            codex)        match="Gemini CLI / Codex" ;;
             goose)        match="block/goose" ;;
             roo)          match="Roo Code" ;;
             cursor)       match="Cursor" ;;

@@ -15,7 +15,7 @@
 
 ---
 
-**v1.8.1** · Three-source skill discovery · 10 supported AI tools · Cross-tool sync status reporter · ChatGPT cloud upload · Hardened security scanning
+**v1.9.0** · Three-source skill discovery · 9 supported AI tools · Cross-tool sync status reporter · ChatGPT cloud upload · Hardened security scanning
 
 A centralized skill manager for AI coding assistants. Discovers, installs, and synchronizes skills from multiple sources — [SkillsMP.com](https://skillsmp.com) (curated, AI semantic search), [SkillHub](https://skills.palebluedot.live) (community skills, no API key required), and [ClawHub](https://clawhub.ai) (versioned skills, semantic search, no API key required) — across multiple AI tools including Claude Code, OpenAI Codex, Gemini CLI, and more.
 
@@ -84,7 +84,7 @@ sh /tmp/install.sh --tools claude,gemini
 curl -fsSL https://raw.githubusercontent.com/jacob-bd/universal-skills-manager/main/install.sh | sh -s -- --tools codex
 ```
 
-**Supported `--tools` values:** `claude`, `gemini`, `antigravity`, `opencode`, `openclaw`, `codex`, `goose`, `roo`, `cursor`, `cline`
+**Supported `--tools` values:** `claude`, `gemini`, `antigravity`, `opencode`, `openclaw`, `codex`, `goose`, `roo`, `cursor`, `cline` (`gemini` and `codex` both install to `~/.agents/skills/`)
 
 > **Note:** The installer automatically installs to **all** detected AI tools without prompting for confirmation. If you only want to install to specific tools, use the `--tools` flag to target them explicitly.
 
@@ -125,11 +125,10 @@ Once installed, just ask your AI assistant:
 |---------|-------------|------------|
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
 | **Cursor** | `~/.cursor/skills/` | `./.cursor/skills/` |
-| **Gemini CLI** | `~/.gemini/skills/` | `./.gemini/skills/` |
+| **Gemini CLI / Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
-| **OpenAI Codex** | `~/.agents/skills/` | `./.agents/skills/` |
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
 | **Cline** | `~/.cline/skills/` | `./.cline/skills/` |
