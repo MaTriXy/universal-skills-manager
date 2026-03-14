@@ -62,6 +62,12 @@ TOOLS = [
         "project_path": ".openclaw/skills",
     },
     {
+        "id": "cc-claw",
+        "name": "CC-Claw",
+        "user_path": "~/.cc-claw/workspace/skills",
+        "project_path": "",
+    },
+    {
         "id": "claude-code",
         "name": "Claude Code",
         "user_path": "~/.claude/skills",
@@ -211,7 +217,7 @@ def detect_tools(
                 "scope": "user",
                 "path": user_dir,
             })
-        if project_dir is not None:
+        if project_dir is not None and tool["project_path"]:
             proj_dir = project_dir / tool["project_path"]
             if proj_dir.is_dir():
                 detected.append({

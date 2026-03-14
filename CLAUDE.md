@@ -60,6 +60,7 @@ The skill manages skills across these AI tools and their respective paths:
 | Google Anti-Gravity | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | OpenCode | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | OpenClaw | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
+| CC-Claw | `~/.cc-claw/workspace/skills/` | N/A (daemon, no project scope) |
 | Claude Code | `~/.claude/skills/` | `./.claude/skills/` |
 | block/goose | `~/.config/goose/skills/` | `./.goose/agents/` |
 | Roo Code | `~/.roo/skills/` | `./.roo/skills/` |
@@ -201,7 +202,7 @@ Synchronization uses a two-layer architecture:
 **Layer 2: SKILL.md agent instructions (action-capable with user approval).** The AI agent reads the sync report and can perform write operations (copy, overwrite, deploy) only after presenting proposed changes and receiving explicit user confirmation.
 
 The sync reporter:
-- Probes all 9 supported tool directories (user-level and optionally project-level)
+- Probes all 10 supported tool directories (user-level and optionally project-level)
 - Compares directory hashes (not just modification times) for accurate drift detection
 - Reports three statuses: in sync, out of sync (identifies newest by mtime), single-tool only
 - Outputs human-readable table or JSON (`--json`) for programmatic consumption

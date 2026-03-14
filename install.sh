@@ -101,7 +101,7 @@ Options:
   --tools LIST      Comma-separated list of tools to install to
                     (skips auto-detection)
                     Valid: claude,gemini,antigravity,opencode,openclaw,
-                           codex,goose,roo,cursor,cline
+                           cc-claw,codex,goose,roo,cursor,cline
                     (gemini and codex both install to ~/.agents/skills/)
 
 Examples:
@@ -170,6 +170,7 @@ detect_tools() {
     check_tool "Anti-Gravity"       "$HOME/.gemini/antigravity" "$HOME/.gemini/antigravity/skills"
     check_tool "OpenCode"           "$HOME/.config/opencode"    "$HOME/.config/opencode/skills"
     check_tool "OpenClaw"           "$HOME/.openclaw"           "$HOME/.openclaw/workspace/skills"
+    check_tool "CC-Claw"            "$HOME/.cc-claw"            "$HOME/.cc-claw/workspace/skills"
     check_tool "block/goose"        "$HOME/.config/goose"       "$HOME/.config/goose/skills"
     check_tool "Roo Code"           "$HOME/.roo"                "$HOME/.roo/skills"
     check_tool "Cursor"             "$HOME/.cursor"             "$HOME/.cursor/skills"
@@ -238,6 +239,7 @@ filter_tools() {
             antigravity)  match="Anti-Gravity" ;;
             opencode)     match="OpenCode" ;;
             openclaw)     match="OpenClaw" ;;
+            cc-claw)      match="CC-Claw" ;;
             codex)        match="Gemini CLI / Codex" ;;
             goose)        match="block/goose" ;;
             roo)          match="Roo Code" ;;

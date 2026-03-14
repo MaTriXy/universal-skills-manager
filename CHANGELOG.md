@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-03-14
+
+### Added
+- **CC-Claw support**: Added CC-Claw as the 10th supported AI tool. User scope: `~/.cc-claw/workspace/skills/`. CC-Claw is a daemon-based tool with no project scope.
+- CC-Claw detection in `install.sh` one-liner installer (`--tools cc-claw`).
+- CC-Claw included in Skill Matrix Report tool detection and skill collection.
+- 2 new tests: CC-Claw detection and daemon no-project-scope verification. Total sync tests: 65.
+
+### Changed
+- `sync_skills.py`: Added guard for empty `project_path` to support daemon-only tools (no project scope). This prevents false project-scope matches for tools like CC-Claw.
+- Tool count updated from 9 to 10 across all documentation.
+
+### Updated files
+- `sync_skills.py`: Added CC-Claw entry, empty-project-path guard in `detect_tools()`.
+- `SKILL.md`: Updated ecosystem table, version, matrix report detection, find command.
+- `CLAUDE.md`: Updated ecosystem table, tool count.
+- `README.md`: Updated version header, `--tools` help text, supported tools table.
+- `docs/TECHNICAL.md`: Updated tool count.
+- `install.sh`: Added CC-Claw detection and `--tools cc-claw` filter.
+- `tests/test_sync_skills.py`: Added `test_detect_cc_claw` and `test_cc_claw_no_project_scope`.
+
 ## [1.9.0] - 2026-03-13
 
 ### Changed
