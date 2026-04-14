@@ -226,22 +226,22 @@ def test_detect_tools_all_tools(tmp_path):
     assert len(detected) == len(TOOLS)
 
 
-def test_detect_cc_claw(tmp_path):
-    """CC-Claw is detected via its workspace/skills directory."""
-    make_tool_dir(tmp_path, ".cc-claw/workspace/skills")
+def test_detect_alef_agent(tmp_path):
+    """Alef Agent is detected via its workspace/skills directory."""
+    make_tool_dir(tmp_path, ".alef-agent/workspace/skills")
     detected = detect_tools(home=tmp_path)
     ids = [t["id"] for t in detected]
-    assert "cc-claw" in ids
+    assert "alef-agent" in ids
     assert all(t["scope"] == "user" for t in detected)
 
 
-def test_cc_claw_no_project_scope(tmp_path):
-    """CC-Claw (daemon) has no project scope and should not appear in project detection."""
+def test_alef_agent_no_project_scope(tmp_path):
+    """Alef Agent (daemon) has no project scope and should not appear in project detection."""
     project = tmp_path / "my-project"
     project.mkdir()
     detected = detect_tools(home=tmp_path, project_dir=project)
-    cc_claw_entries = [t for t in detected if t["id"] == "cc-claw"]
-    assert len(cc_claw_entries) == 0
+    alef_agent_entries = [t for t in detected if t["id"] == "alef-agent"]
+    assert len(alef_agent_entries) == 0
 
 
 def test_resolve_tool_path_with_home(tmp_path):

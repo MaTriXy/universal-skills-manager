@@ -62,9 +62,9 @@ TOOLS = [
         "project_path": ".openclaw/skills",
     },
     {
-        "id": "cc-claw",
-        "name": "CC-Claw",
-        "user_path": "~/.cc-claw/workspace/skills",
+        "id": "alef-agent",
+        "name": "Alef Agent",
+        "user_path": "~/.alef-agent/workspace/skills",
         "project_path": "",
     },
     {

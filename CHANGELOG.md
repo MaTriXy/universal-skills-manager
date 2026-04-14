@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-04-14
+
+### Changed
+- **CC-Claw renamed to Alef Agent**: Updated all references from CC-Claw to Alef Agent. New user-scope path: `~/.alef-agent/workspace/skills/`. Daemon tool with no project scope (unchanged).
+- `--tools` flag value updated from `cc-claw` to `alef-agent` in `install.sh`.
+
+### Updated files
+- `sync_skills.py`: Updated tool entry (`id`, `name`, `user_path`).
+- `SKILL.md`: Updated ecosystem table, matrix detection command, `find` path.
+- `CLAUDE.md`: Updated ecosystem table.
+- `README.md`: Updated `--tools` help text, supported tools table.
+- `install.sh`: Updated detection line, help text, and `case` match.
+- `tests/test_sync_skills.py`: Renamed `test_detect_cc_claw` → `test_detect_alef_agent` and `test_cc_claw_no_project_scope` → `test_alef_agent_no_project_scope`.
+
 ## [1.10.0] - 2026-03-14
 
 ### Added

@@ -9,7 +9,7 @@ metadata:
   primaryEnv: SKILLSMP_API_KEY
 ---
 
-<!-- Version: 1.10.0 -->
+<!-- Version: 1.11.0 -->
 
 # Universal Skills Manager
 
@@ -35,7 +35,7 @@ This skill manages the following tools and scopes. Always verify these paths exi
 | **Google Anti-Gravity** | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | **OpenCode** | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | **OpenClaw** | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
-| **CC-Claw** | `~/.cc-claw/workspace/skills/` | N/A (daemon, no project scope) |
+| **Alef Agent** | `~/.alef-agent/workspace/skills/` | N/A (daemon, no project scope) |
 | **Claude Code** | `~/.claude/skills/` | `./.claude/skills/` |
 | **block/goose** | `~/.config/goose/skills/` | `./.goose/agents/` |
 | **Roo Code** | `~/.roo/skills/` | `./.roo/skills/` |
@@ -344,7 +344,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
     ls -d ~/.agents/skills 2>/dev/null && echo "Gemini CLI / Codex: ✓"
     ls -d ~/.gemini/antigravity/skills 2>/dev/null && echo "Antigravity: ✓"
     ls -d ~/.openclaw/workspace/skills 2>/dev/null && echo "OpenClaw: ✓"
-    ls -d ~/.cc-claw/workspace/skills 2>/dev/null && echo "CC-Claw: ✓"
+    ls -d ~/.alef-agent/workspace/skills 2>/dev/null && echo "Alef Agent: ✓"
     ls -d ~/.cursor/skills 2>/dev/null && echo "Cursor: ✓"
     ls -d ~/.config/opencode/skills 2>/dev/null && echo "OpenCode: ✓"
     ls -d ~/.roo/skills 2>/dev/null && echo "Roo: ✓"
@@ -355,7 +355,7 @@ This skill (Universal Skills Manager) requires network access to call the Skills
 2.  **Collect All Skills:**
     For each detected tool, list skill folders:
     ```bash
-    find ~/.{claude,agents,gemini/antigravity,openclaw/workspace,cc-claw/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
+    find ~/.{claude,agents,gemini/antigravity,openclaw/workspace,alef-agent/workspace,cursor,config/opencode,config/goose,roo,cline}/skills -maxdepth 1 -type d 2>/dev/null | \
       xargs -I{} basename {} | sort -u
     ```
 

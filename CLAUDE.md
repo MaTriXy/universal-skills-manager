@@ -60,7 +60,7 @@ The skill manages skills across these AI tools and their respective paths:
 | Google Anti-Gravity | `~/.gemini/antigravity/skills/` | `./.antigravity/extensions/` |
 | OpenCode | `~/.config/opencode/skills/` | `./.opencode/skills/` |
 | OpenClaw | `~/.openclaw/workspace/skills/` | `./.openclaw/skills/` |
-| CC-Claw | `~/.cc-claw/workspace/skills/` | N/A (daemon, no project scope) |
+| Alef Agent | `~/.alef-agent/workspace/skills/` | N/A (daemon, no project scope) |
 | Claude Code | `~/.claude/skills/` | `./.claude/skills/` |
 | block/goose | `~/.config/goose/skills/` | `./.goose/agents/` |
 | Roo Code | `~/.roo/skills/` | `./.roo/skills/` |
