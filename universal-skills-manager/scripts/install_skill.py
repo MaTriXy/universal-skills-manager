@@ -31,7 +31,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 
 # =============================================================================
@@ -706,6 +706,65 @@ def display_manifest(manifest_path: Path) -> None:
 
 
 # =============================================================================
+# Tool-specific Modifications
+# =============================================================================
+
+def _inject_frontmatter_extras(skill_path: Path, extras: dict) -> None:
+    """Inject extra frontmatter fields into SKILL.md for tool-specific compatibility."""
+    if not skill_path.exists():
+        return
+        
+    content = skill_path.read_text(encoding="utf-8")
+    if not content.startswith("---"):
+        return
+
+    try:
+        end_idx = content.index("---", 3)
+    except ValueError:
+        return
+        
+    frontmatter = content[3:end_idx]
+
+    for key, value in extras.items():
+        # Remove any existing line for this key
+        frontmatter = re.sub(rf"\n{re.escape(key)}:.*", "", frontmatter)
+        # Add the field
+        frontmatter = frontmatter.rstrip() + f"\n{key}: {value}\n"
+
+    content = "---" + frontmatter + "---" + content[end_idx + 3 :]
+    skill_path.write_text(content, encoding="utf-8")
+
+
+def _get_frontmatter_extras_for_dest(dest: Path) -> dict:
+    """Check destination path against registry to find frontmatter extras."""
+    try:
+        from sync_skills import TOOLS
+    except ImportError:
+        return {}
+        
+    for tool in TOOLS:
+        if "frontmatter_extras" not in tool:
+            continue
+            
+        user_path_str = tool.get("user_path")
+        if user_path_str:
+            user_path = Path(user_path_str).expanduser().resolve()
+            try:
+                # Check if dest is inside user_path
+                dest.resolve().relative_to(user_path)
+                return tool["frontmatter_extras"]
+            except ValueError:
+                pass
+                
+        project_path_str = tool.get("project_path")
+        if project_path_str:
+            if str(dest.resolve()).endswith(project_path_str) or project_path_str in str(dest.resolve()):
+                return tool["frontmatter_extras"]
+                
+    return {}
+
+
+# =============================================================================
 # Installation
 # =============================================================================
 
@@ -1022,6 +1081,13 @@ Examples:
             sys.exit(2)
         
         print("  ✓ All files valid")
+
+        # Inject frontmatter extras if tool requires it
+        extras = _get_frontmatter_extras_for_dest(dest)
+        if extras:
+            if args.verbose:
+                print(f"\nInjecting frontmatter extras for destination: {extras}")
+            _inject_frontmatter_extras(temp_path / "SKILL.md", extras)
 
         # Step 2.5: Security scan
         if not args.skip_scan:

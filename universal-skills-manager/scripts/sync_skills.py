@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 
 # ============================================================================
 # Tool Registry
@@ -66,6 +66,7 @@ TOOLS = [
         "name": "Alef Agent",
         "user_path": "~/.alef-agent/workspace/skills",
         "project_path": "",
+        "frontmatter_extras": {"type": "tool", "status": "approved"},
     },
     {
         "id": "claude-code",

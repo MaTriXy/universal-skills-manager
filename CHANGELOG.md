@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-04-22
+
+### Added
+- **Alef Agent frontmatter injection**: During installation to the Alef Agent workspace (`~/.alef-agent/workspace/skills/`), `install_skill.py` now dynamically injects `type: tool` and `status: approved` into the YAML frontmatter of `SKILL.md`.
+- **Alef tool definition configuration**: `sync_skills.py` now includes a `frontmatter_extras` dict in the Alef Agent tool definition to centrally manage agent-specific metadata requirements.
+- 3 new unit tests in `tests/test_install_skill.py` validating path-based frontmatter injection and existing-field overwrites.
+
+### Changed
+- Bumped `install_skill.py` to v1.4.0.
+- Bumped `sync_skills.py` to v1.3.0.
+
 ## [1.11.0] - 2026-04-14
 
 ### Changed
